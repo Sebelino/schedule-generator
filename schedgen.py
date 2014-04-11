@@ -29,6 +29,13 @@ def myformat(inters):
     month = 4
     week = inters[0].isocalendar()[1]
 
+""" Return the content of the file with path 'path', with every occurrence of 'term' replaced by
+'replacement'. """
+def filecontext(replacement,term,path):
+    modcontent = ''
+    with open(path,'r') as myfile:
+        return ''.join([line.replace(term,replacement) for line in myfile])
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-i","--input",type=str,metavar='file',default='schedule.csv',
     help="The file which is to be read. If not specified, the output will\
@@ -74,7 +81,9 @@ for day in weekdays:
         html += trtag+content+trend
     html += '</table></td>'
 html += '</table>'
+html = prettyxml(html)
 
-print prettyxml(html)
-#print html
-
+filepath = 'template.html'
+term = '{{DATA}}'
+context = filecontext(html,term,filepath)
+print context
