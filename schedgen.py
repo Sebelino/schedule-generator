@@ -79,7 +79,7 @@ record = {
     'tuesday':   [((7,30),(10,0),'ml'),((10,0),(22,0),'os')],
     'wednesday': [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
     'thursday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'friday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+    'friday':    [((5,50),(11,0),'ml'),((13,0),(18,0),'os')],
     'saturday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
     'sunday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')]
 }
@@ -100,7 +100,7 @@ year = record['year']
 week = record['week']
 
 html = '<table class="weektable">'
-html += '<td>%s</td>'% sidebarhtml()
+html += '<td class="sidebarbigtd">%s</td>'% sidebarhtml()
 for day in weekdays:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
