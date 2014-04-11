@@ -30,10 +30,10 @@ body{
     position: relative;
     float: left;
     margin: 5px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
     background-color: black;
-    padding: 5px;
+    padding: 1px 0px 1px 0px;
 }
 
 .daybox{
@@ -41,7 +41,7 @@ body{
     float: left;
     width: calc(100%/7 - 2px);
     height: 100%;
-    height: calc(100% - 2px);
+    height: calc(100% - 0px);
     background-color: white;
     margin: 0px 1px 0px 1px;
 }
