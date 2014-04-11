@@ -58,7 +58,7 @@ record = {
     'year': 2014, # Year of the first day of the week.
     'week': 4,
     'monday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'tuesday':   [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+    'tuesday':   [((7,30),(10,0),'ml'),((10,0),(22,0),'os')],
     'wednesday': [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
     'thursday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
     'friday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
@@ -76,9 +76,10 @@ for day in weekdays:
     html += '<td><table class="daytable">'
     for ((ahrs,amin),(bhrs,bmin),s) in record[day]:
         height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60)
-        trtag = '<tr height="%s%%">'% height
+        trtag = '<tr><td height="%s%%">'% height
+        #trtag = '<tr><td height="%s%%">'% height
         content = s
-        trend = '</tr>'
+        trend = '</td></tr>'
         html += trtag+content+trend
     html += '</table></td>'
 html += '</table>'
