@@ -14,7 +14,8 @@ __author__ = "Sebastian Olsson"
 def prettyxml(xml):
     doc = minidom.parseString(xml)
     pretty = doc.toprettyxml(indent="  ",encoding="utf-8")
-    return str(pretty)
+    without_xml_header = pretty.split('\n',1)[1]
+    return str(without_xml_header)
 
 def intervals(path):
     with open(path,'r') as csvfile:
@@ -37,9 +38,9 @@ def filecontext(replacement,term,path):
         return ''.join([line.replace(term,replacement) for line in myfile])
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i","--input",type=str,metavar='file',default='schedule.csv',
+parser.add_argument("-i","--input",type=str,metavar='file',default='data.csv',
     help="The file which is to be read. If not specified, the output will\
-    be written to ./dat/schedule.csv.")
+    be written to ./data.csv.")
 parser.add_argument("-f","--subject",type=str,metavar='subject',
     help="The subject to filter on")
 parser.add_argument("-s","--sum",action='store_true',
@@ -68,11 +69,11 @@ record = {
 weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 year = record['year']
 week = record['week']
-html = '<table>'
+html = '<table class="weektable">'
 for day in weekdays:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
-    html += '<td><table height="100%">'
+    html += '<td><table class="daytable">'
     for ((ahrs,amin),(bhrs,bmin),s) in record[day]:
         height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60)
         trtag = '<tr height="%s%%">'% height
