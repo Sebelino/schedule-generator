@@ -12,6 +12,9 @@ Simple schedule generator.
 
 __author__ = "Sebastian Olsson"
 
+def validaterecord(record):
+    pass
+
 def prettyxml(xml):
     doc = minidom.parseString(xml)
     pretty = doc.toprettyxml(indent="  ",encoding="utf-8")
@@ -81,6 +84,8 @@ record = {
     'sunday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')]
 }
 
+validaterecord(record)
+
 weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 
 subjects = set([dayrecord[2] for day in weekdays for dayrecord in record[day]])
@@ -111,7 +116,8 @@ for day in weekdays:
         trend = '</td></tr>'
         html += trtag+content+trend
         trailingheight = 100*(60*((record[day][i+1][0][0] if i+1 < len(record[day]) else 24)-bhrs)+((record[day][i+1][0][1] if i+1 < len(record[day]) else 0)-bmin))/(24*60.0)
-        html += '<tr><td height="%s%%"></td></tr>'% initheight
+        if trailingheight >= 0.001:
+            html += '<tr><td height="%s%%"></td></tr>'% trailingheight
     html += '</table></td>'
 html += '</table>'
 html = prettyxml(html)
