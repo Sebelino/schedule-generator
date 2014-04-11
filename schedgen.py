@@ -107,19 +107,16 @@ for day in weekdays:
     dayname = day[0].upper()+day[1:]
     html += '<div class="daybox">'
     #html += '<tr><th>%s</th></tr>'% dayname
-    #initheight = 100*(60*record[day][0][0][0]+record[day][0][0][1])/(24*60.0)
-    #html += '<tr><td height="%s%%"></td></tr>'% initheight
     for i in range(len(record[day])):
         ((ahrs,amin),(bhrs,bmin),s) = record[day][i]
         height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60.0)
         color = colormap[s]
-        trtag = '<div class="eventbox" style="height:%s%%; background-color:#%02x%02x%02x">'% tuple([height]+list(color))
+        top = 100*(60*ahrs+amin)/(24*60.0)
+        style = "height:%s%%; top:%s%%; background-color:#%02x%02x%02x"% tuple([height,top]+list(color))
+        trtag = '<div class="eventbox" style="%s">'% style
         content = s
         trend = '</div>'
         html += trtag+content+trend
-        #trailingheight = 100*(60*((record[day][i+1][0][0] if i+1 < len(record[day]) else 24)-bhrs)+((record[day][i+1][0][1] if i+1 < len(record[day]) else 0)-bmin))/(24*60.0)
-        #if trailingheight >= 0.001:
-        #    html += '<tr><td height="%s%%"></td></tr>'% trailingheight
     html += '</div>'
 html += '</div>'
 html += '</div>'
