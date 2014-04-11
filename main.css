@@ -1,6 +1,16 @@
+html{
+    height: 100%;
+}
+
+body{
+    background-color: black;
+    height: 95%;
+}
+
 table{
     border-style: solid;
     border-width: 2px;
+    border-color: green;
     table-layout: fixed;
     border-spacing: 0px;
     padding: 0px;
@@ -8,19 +18,43 @@ table{
     margin-left: auto;
     margin-top: auto;
     margin-bottom: auto;
+    background-color: white;
 }
+
 td{
+    border: 0px solid black;
+    vertical-align: top;
+}
+
+.eventtd{
     border: 1px solid black;
     vertical-align: top;
 }
+
+.sidebartd{
+    text-align: right;
+    border-top:    1px solid;
+    border-bottom: 0px solid;
+    border-left:   1px solid;
+    border-right:  1px solid;
+}
+
 .weektable{
-    width: 700px;
-    height: 700px;
+    width: 90%;
+    height: 100%;
     border-width: 4px;
 }
+
 .daytable{
     width: 100%;
-    height: 50%;
-    border-width: 2px;
-    border-color: red;
+    height: 100%;
+    border-width: 1px;
+    border-color: black;
+}
+
+.sidetable{
+    width: 100%;
+    height: 100%;
+    border-width: 0px;
+    border-color: black;
 }

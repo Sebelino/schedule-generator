@@ -1,8 +1,9 @@
 #!/usr/bin/python2.7
 
 import sys,time,thread,os,argparse,select,csv,datetime
-from pprint import pprint
 import xml.dom.minidom as minidom
+from pprint import pprint
+from random import randint
 
 """
 Simple schedule generator.
@@ -16,6 +17,10 @@ def prettyxml(xml):
     pretty = doc.toprettyxml(indent="  ",encoding="utf-8")
     without_xml_header = pretty.split('\n',1)[1]
     return str(without_xml_header)
+
+def sidebarhtml():
+    with open('sidebar.html','r') as myfile:
+        return ''.join(myfile.readlines())
 
 def intervals(path):
     with open(path,'r') as csvfile:
@@ -36,6 +41,16 @@ def filecontext(replacement,term,path):
     modcontent = ''
     with open(path,'r') as myfile:
         return ''.join([line.replace(term,replacement) for line in myfile])
+
+def randomcolor():
+    return (randint(0,255),randint(0,255),randint(0,255))
+
+""" True if it is okay to pick 'color' as a schedule event color. """
+def qualifiedcolor(color,takencolors):
+    toodark = sum([c*c for c in color]) < 50**2
+    diffs = [tuple([b-a for (a,b) in zip(color,clr)]) for clr in takencolors]
+    toosimilar = all([sum([c*c for c in diff]) < 100**2 for diff in diffs])
+    return not toodark and not toosimilar
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i","--input",type=str,metavar='file',default='data.csv',
@@ -67,20 +82,36 @@ record = {
 }
 
 weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+
+subjects = set([dayrecord[2] for day in weekdays for dayrecord in record[day]])
+colormap = dict()
+for s in subjects:
+    color = randomcolor()
+    if qualifiedcolor(color,colormap.values()):
+        color = randomcolor()
+    colormap[s] = color
+
 year = record['year']
 week = record['week']
+
 html = '<table class="weektable">'
+html += '<td>%s</td>'% sidebarhtml()
 for day in weekdays:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
     html += '<td><table class="daytable">'
-    for ((ahrs,amin),(bhrs,bmin),s) in record[day]:
-        height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60)
-        trtag = '<tr><td height="%s%%">'% height
-        #trtag = '<tr><td height="%s%%">'% height
+    initheight = 100*(60*record[day][0][0][0]+record[day][0][0][1])/(24*60.0)
+    html += '<tr><td height="%s%%"></td></tr>'% initheight
+    for i in range(len(record[day])):
+        ((ahrs,amin),(bhrs,bmin),s) = record[day][i]
+        height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60.0)
+        color = colormap[s]
+        trtag = '<tr><td class="eventtd" height="%s%%" bgcolor="#%02x%02x%02x">'% tuple([height]+list(color))
         content = s
         trend = '</td></tr>'
         html += trtag+content+trend
+        trailingheight = 100*(60*((record[day][i+1][0][0] if i+1 < len(record[day]) else 24)-bhrs)+((record[day][i+1][0][1] if i+1 < len(record[day]) else 0)-bmin))/(24*60.0)
+        html += '<tr><td height="%s%%"></td></tr>'% initheight
     html += '</table></td>'
 html += '</table>'
 html = prettyxml(html)
