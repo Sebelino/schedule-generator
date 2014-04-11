@@ -99,27 +99,30 @@ for s in subjects:
 year = record['year']
 week = record['week']
 
-html = '<table class="weektable">'
-html += '<td class="sidebarbigtd">%s</td>'% sidebarhtml()
+html = '<div class="schedulebox">'
+#html += '<div class="sidebarbigtd">%s</div>'% sidebarhtml()
+html += '<div class="weekbox">'
 for day in weekdays:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
-    html += '<td><table class="daytable">'
-    initheight = 100*(60*record[day][0][0][0]+record[day][0][0][1])/(24*60.0)
-    html += '<tr><td height="%s%%"></td></tr>'% initheight
+    html += '<div class="daybox">'
+    #html += '<tr><th>%s</th></tr>'% dayname
+    #initheight = 100*(60*record[day][0][0][0]+record[day][0][0][1])/(24*60.0)
+    #html += '<tr><td height="%s%%"></td></tr>'% initheight
     for i in range(len(record[day])):
         ((ahrs,amin),(bhrs,bmin),s) = record[day][i]
         height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60.0)
         color = colormap[s]
-        trtag = '<tr><td class="eventtd" height="%s%%" bgcolor="#%02x%02x%02x">'% tuple([height]+list(color))
+        trtag = '<div class="eventbox" style="height:%s%%; background-color:#%02x%02x%02x">'% tuple([height]+list(color))
         content = s
-        trend = '</td></tr>'
+        trend = '</div>'
         html += trtag+content+trend
-        trailingheight = 100*(60*((record[day][i+1][0][0] if i+1 < len(record[day]) else 24)-bhrs)+((record[day][i+1][0][1] if i+1 < len(record[day]) else 0)-bmin))/(24*60.0)
-        if trailingheight >= 0.001:
-            html += '<tr><td height="%s%%"></td></tr>'% trailingheight
-    html += '</table></td>'
-html += '</table>'
+        #trailingheight = 100*(60*((record[day][i+1][0][0] if i+1 < len(record[day]) else 24)-bhrs)+((record[day][i+1][0][1] if i+1 < len(record[day]) else 0)-bmin))/(24*60.0)
+        #if trailingheight >= 0.001:
+        #    html += '<tr><td height="%s%%"></td></tr>'% trailingheight
+    html += '</div>'
+html += '</div>'
+html += '</div>'
 html = prettyxml(html)
 
 filepath = 'template.html'

@@ -7,64 +7,47 @@ body{
     height: 95%;
 }
 
-table{
-    border-style: solid;
-    border-width: 2px;
-    border-color: white;
-    table-layout: fixed;
-    border-spacing: 0px;
-    padding: 0px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-    background-color: white;
-}
-
-td{
-    border: 0px solid black;
-    vertical-align: top;
-    padding: 0px;
-}
-
-.eventtd{
-    border-top:    1px solid;
-    border-bottom: 1px solid;
-    border-left:   0px solid;
-    border-right:  0px solid;
-    vertical-align: top;
-}
-
-.sidebartd{
-    text-align: right;
-    border: 1px solid;
-}
-
-.sidebarbigtd{
-    border: 0px solid;
+.sidebarbox{
+    position: relative;
     width: 50px;
 }
 
-.sidetable{
-    width: 100%;
-    height: 100%;
-    border-width: 0px;
-    border-color: black;
-    border-collapse: collapse;
+.sidebartimebox{
+    position: relative;
+    text-align: right;
+    font-size: 11px;
 }
 
-.weektable{
+.schedulebox{
+    position: relative;
+    margin: auto;
     width: 95%;
-    height: 100%;
-    border-width: 4px;
+    height: 95%;
+    background-color: white;
 }
 
-.daytable{
-    width: 100%;
+.weekbox{
+    position: relative;
+    float: left;
+    margin: 5px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    background-color: green;
+    padding: 5px;
+}
+
+.daybox{
+    position: relative;
+    float: left;
+    width: calc(100%/7 - 2px);
     height: 100%;
-    border-top:    1px solid;
-    border-bottom: 1px solid;
-    border-left:   0px solid;
-    border-right:  1px solid;
-    border-collapse: collapse;
+    height: calc(100% - 2px);
+    background-color: yellow;
+    margin: 0px 1px 0px 1px;
+}
+
+.eventbox{
+    position: relative;
+    vertical-align: top;
+    margin: 0px;
 }
