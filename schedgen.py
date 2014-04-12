@@ -154,7 +154,7 @@ for day in WEEKDAYS:
         top = 100*(60*ahrs+amin)/(24*60.0)
         style = "height:%s%%; top:%s%%; background-color:#%02x%02x%02x"% tuple([height,top]+list(color))
         trtag = '<div class="eventbox" style="%s">'% style
-        content = s if height > 2.3 else ' '
+        content = s if height > 1.5 else ' '
         trend = '</div>'
         html += trtag+content+trend
     html += '</div>'
