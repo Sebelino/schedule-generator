@@ -50,10 +50,19 @@ def merge(record):
         for i in range(len(record[day])-1):
             (astart,(ahrs,amin),asubject) = record[day][i]
             ((bhrs,bmin),bstop,bsubject) = record[day][i+1]
-            if asubject == bsubject and (60*bhrs+bmin)-(60*ahrs+amin) <= 1:
-                record[day][i:i+2] = [(astart,bstop,asubject)]
-                return merge(record)
+            if asubject == bsubject:
+                minuteshole = (60*bhrs+bmin)-(60*ahrs+amin)
+                if minuteshole <= 5:
+                    newbstop = subtracttime(bstop,(0,minuteshole))
+                    record[day][i:i+2] = [(astart,newbstop,asubject)]
+                    return merge(record)
     return record
+
+def subtracttime(timea,timeb):
+    (ahrs,amin) = timea
+    (bhrs,bmin) = timeb
+    mins = 60*(ahrs-bhrs)+(amin-bmin)
+    return (int(mins)/60,mins % 60)
 
 """ Return the content of the file with path 'path', with every occurrence of 'term' replaced by
 'replacement'. """
