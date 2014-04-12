@@ -127,7 +127,7 @@ subjects = set([dayrecord[2] for day in WEEKDAYS for dayrecord in record[day]])
 colormap = dict()
 for s in subjects:
     color = randomcolor()
-    if qualifiedcolor(color,colormap.values()):
+    while not qualifiedcolor(color,colormap.values()):
         color = randomcolor()
     colormap[s] = color
 
