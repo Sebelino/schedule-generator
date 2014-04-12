@@ -49,6 +49,7 @@ body{
     border-style: solid;
     border-color: black;
     font-size: 11px;
+    z-index: 1;
 }
 
 .schedulebox{
