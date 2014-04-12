@@ -100,7 +100,12 @@ year = record['year']
 week = record['week']
 
 html = '<div class="schedulebox">'
-#html += '<div class="sidebarbigtd">%s</div>'% sidebarhtml()
+
+html += '<div class="sidebarbox">'
+for h in range(24):
+    html += '<div class="sidebartimebox" style="top:%s%%">%02d:00</div>'% (100*h/24.0,h)
+html += '</div>'
+
 html += '<div class="weekbox">'
 for day in weekdays:
     dayrecord = record[day]
