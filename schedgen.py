@@ -58,6 +58,17 @@ def merge(record):
                     return merge(record)
     return record
 
+""" If an event extends over two days, split it into two. """
+def split(record):
+    for i in range(len(WEEKDAYS)):
+        for j in range(len(record[WEEKDAYS[i]])):
+            ((ahrs,amin),(bhrs,bmin),subject) = record[WEEKDAYS[i]][j]
+            if 60*bhrs+bmin < 60*ahrs+amin:
+                record[WEEKDAYS[i]][j] = ((ahrs,amin),(23,59),subject)
+                if i != 6:
+                    record[WEEKDAYS[i+1]].insert(0,((0,0),(bhrs,bmin),subject))
+    return record
+
 def subtracttime(timea,timeb):
     (ahrs,amin) = timea
     (bhrs,bmin) = timeb
@@ -95,6 +106,7 @@ data_dir = "."
 path = os.path.join(data_dir,args.input)
 
 record = myformat(intervals(path))
+record = split(record)
 record = merge(record)
 #pprint(record)
 validaterecord(record)
