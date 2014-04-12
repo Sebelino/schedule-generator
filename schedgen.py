@@ -111,7 +111,7 @@ for day in weekdays:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
     html += '<div class="daybox">'
-    #html += '<tr><th>%s</th></tr>'% dayname
+    html += '<div class="headerbox">%s</div>'% dayname
     for i in range(len(record[day])):
         ((ahrs,amin),(bhrs,bmin),s) = record[day][i]
         height = 100*(60*(bhrs-ahrs)+(bmin-amin))/(24*60.0)
