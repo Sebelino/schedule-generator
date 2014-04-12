@@ -76,7 +76,7 @@ def randomcolor():
 
 """ True if it is okay to pick 'color' as a schedule event color. """
 def qualifiedcolor(color,takencolors):
-    toodark = sum([c*c for c in color]) < 50**2
+    toodark = sum([c*c for c in color]) < 400**2
     diffs = [tuple([b-a for (a,b) in zip(color,clr)]) for clr in takencolors]
     toosimilar = all([sum([c*c for c in diff]) < 100**2 for diff in diffs])
     return not toodark and not toosimilar
