@@ -12,6 +12,8 @@ Simple schedule generator.
 
 __author__ = "Sebastian Olsson"
 
+WEEKDAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+
 def validaterecord(record):
     pass
 
@@ -21,10 +23,6 @@ def prettyxml(xml):
     without_xml_header = pretty.split('\n',1)[1]
     return str(without_xml_header)
 
-def sidebarhtml():
-    with open('sidebar.html','r') as myfile:
-        return ''.join(myfile.readlines())
-
 def intervals(path):
     with open(path,'r') as csvfile:
         reader = csv.reader(csvfile)
@@ -33,10 +31,29 @@ def intervals(path):
         intervals = [(timeparse(start),timeparse(stop),topic) for (start,stop,topic) in reader]
         return intervals
 
-def myformat(inters):
+def myformat(intervals):
     year = 2014
     month = 4
-    week = inters[0].isocalendar()[1]
+    week = intervals[0][0].isocalendar()[1]
+    record = {'year':year,'week':week}
+    for day in WEEKDAYS:
+        record[day] = []
+    for (start,stop,subject) in intervals:
+        day = WEEKDAYS[start.weekday()]
+        record[day].append(((start.hour,start.minute),(stop.hour,stop.minute),subject))
+    return record
+
+""" If several events with the same subject are too close to each other, they are merged into
+one. """
+def merge(record):
+    for day in WEEKDAYS:
+        for i in range(len(record[day])-1):
+            (astart,(ahrs,amin),asubject) = record[day][i]
+            ((bhrs,bmin),bstop,bsubject) = record[day][i+1]
+            if asubject == bsubject and (60*bhrs+bmin)-(60*ahrs+amin) <= 1:
+                record[day][i:i+2] = [(astart,bstop,asubject)]
+                return merge(record)
+    return record
 
 """ Return the content of the file with path 'path', with every occurrence of 'term' replaced by
 'replacement'. """
@@ -65,30 +82,27 @@ parser.add_argument("-s","--sum",action='store_true',
     help="Sum the results.")
 args = parser.parse_args()
 
-working_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = "."
 path = os.path.join(data_dir,args.input)
 
-#inters = myformat(intervals(path))
-#pprint(inters)
-
-record = {
-    'year': 2014, # Year of the first day of the week.
-    'week': 4,
-    'monday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'tuesday':   [((7,30),(10,0),'ml'),((10,0),(22,0),'os')],
-    'wednesday': [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'thursday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'friday':    [((5,50),(11,0),'ml'),((13,0),(18,0),'os')],
-    'saturday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
-    'sunday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')]
-}
-
+record = myformat(intervals(path))
+record = merge(record)
+#pprint(record)
 validaterecord(record)
 
-weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+#record = {
+#    'year': 2014, # Year of the first day of the week.
+#    'week': 4,
+#    'monday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+#    'tuesday':   [((7,30),(10,0),'ml'),((10,0),(22,0),'os')],
+#    'wednesday': [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+#    'thursday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+#    'friday':    [((5,50),(11,0),'ml'),((13,0),(18,0),'os')],
+#    'saturday':  [((4,30),(10,0),'ml'),((10,0),(15,0),'os')],
+#    'sunday':    [((4,30),(10,0),'ml'),((10,0),(15,0),'os')]
+#}
 
-subjects = set([dayrecord[2] for day in weekdays for dayrecord in record[day]])
+subjects = set([dayrecord[2] for day in WEEKDAYS for dayrecord in record[day]])
 colormap = dict()
 for s in subjects:
     color = randomcolor()
@@ -107,7 +121,7 @@ for h in range(24):
 html += '</div>'
 
 html += '<div class="weekbox">'
-for day in weekdays:
+for day in WEEKDAYS:
     dayrecord = record[day]
     dayname = day[0].upper()+day[1:]
     html += '<div class="daybox">'
