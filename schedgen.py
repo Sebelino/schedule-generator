@@ -34,13 +34,16 @@ def intervals(path):
 def myformat(intervals):
     year = 2014
     month = 4
-    week = intervals[0][0].isocalendar()[1]
+    existingweeks = set(interval[i].isocalendar()[1] for interval in intervals for i in (0,1))
+    currentweek = datetime.datetime.now().isocalendar()[1]
+    week = currentweek
     record = {'year':year,'week':week}
     for day in WEEKDAYS:
         record[day] = []
     for (start,stop,subject) in intervals:
         day = WEEKDAYS[start.weekday()]
-        record[day].append(((start.hour,start.minute),(stop.hour,stop.minute),subject))
+        if start.isocalendar()[1] == week: # TODO: case when an event extends from a Sunday to a Monday
+            record[day].append(((start.hour,start.minute),(stop.hour,stop.minute),subject))
     return record
 
 """ If several events with the same subject are too close to each other, they are merged into
